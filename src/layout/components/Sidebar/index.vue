@@ -62,9 +62,10 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .scrollbar-wrapper {
-  background: url("~@/./assets/common/kf.jpg") no-repeat 0 100%;
+  background: url("~@/assets/common/kf.jpg") no-repeat 0 100%;
+  // background-color: powderblue;
   background-size: cover;
-  background-position: center;
+  background-position: 30%;
 }
 ::v-deep .el-menu {
   border: none;

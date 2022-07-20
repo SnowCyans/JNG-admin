@@ -1,6 +1,7 @@
 <template>
-  <div class="main">
-    <div class="container">
+  <div class="container">
+    <div style="margin: 0 30px">
+      <!-- 查询 -->
       <el-input
         v-model="queryInput"
         placeholder="请输入用户名"
@@ -13,10 +14,14 @@
           @click="queryUser"
         ></el-button>
       </el-input>
+      <!-- 添加用户 -->
       <el-button type="primary" round @click="isAddShow = true"
         >添加用户</el-button
       >
-      <!-- 表格 -->
+    </div>
+
+    <!-- 表格 -->
+    <el-card style="margin: 0 30px">
       <el-table size="mini" border stripe :data="users" style="width: 100%">
         <!-- id -->
         <el-table-column label="#" width="180">
@@ -75,86 +80,99 @@
           </template>
         </el-table-column>
       </el-table>
+    </el-card>
 
-      <!-- 编辑用户 -->
-      <el-dialog title="编辑用户" :visible.sync="flag">
-        <el-form :rules="rules" :model="userDetailsList">
-          <el-form-item label="用户名称" prop="username">
-            <el-input v-model="userDetailsList.username" disabled> </el-input>
-          </el-form-item>
+    <!-- 编辑用户 -->
+    <el-dialog title="编辑用户" :visible.sync="flag">
+      <el-form :rules="rules" :model="userDetailsList">
+        <el-form-item label="用户名称" prop="username">
+          <el-input v-model="userDetailsList.username" disabled> </el-input>
+        </el-form-item>
 
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="userDetailsList.email"> </el-input>
-          </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="userDetailsList.email"> </el-input>
+        </el-form-item>
 
-          <el-form-item label="手机号" prop="mobile">
-            <el-input v-model="userDetailsList.mobile"> </el-input>
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <el-button @click="flag = false">取消</el-button>
-          <el-button type="primary" @click="updata">确定</el-button>
-        </template>
-      </el-dialog>
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="userDetailsList.mobile"> </el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="flag = false">取消</el-button>
+        <el-button type="primary" @click="updata">确定</el-button>
+      </template>
+    </el-dialog>
 
-      <!-- 添加用户 -->
-      <el-dialog
-        title="添加用户"
-        :visible.sync="isAddShow"
-        @close="handleAddClose"
+    <!-- 添加用户 -->
+    <el-dialog
+      title="添加用户"
+      :visible.sync="isAddShow"
+      @close="handleAddClose"
+    >
+      <el-form ref="addFormRef" :rules="rules" :model="loginForm">
+        <el-form-item label="用户名称" prop="username">
+          <el-input v-model="loginForm.username"> </el-input>
+        </el-form-item>
+
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="loginForm.password"> </el-input>
+        </el-form-item>
+
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="loginForm.email"> </el-input>
+        </el-form-item>
+
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="loginForm.mobile"> </el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="isAddShow = false">取消</el-button>
+        <el-button type="primary" @click="userAdd">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 分配角色 -->
+    <el-dialog title="分配角色" :visible.sync="isRoleShow" width="30%">
+      <el-form :inline="true" :model="users2" class="demo-form-inline">
+        <el-form-item label="当前的用户">
+          <label>{{ users2.username }}</label></el-form-item
+        ><br />
+        <el-form-item label="当前的角色">
+          <label>{{ users2.role_name }}</label> </el-form-item
+        ><br />
+        <el-form-item label="分配新角色">
+          <el-select
+            v-model="userRoles.roleName"
+            filterable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in userRoles"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.roleName"
+            ></el-option>
+          </el-select> </el-form-item
+      ></el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="isRoleShow = false">取 消</el-button>
+        <el-button type="primary" @click="branchUserRole">确 定</el-button>
+      </span></el-dialog
+    >
+    <!-- 分页 -->
+    <el-row type="flex" justify="end">
+      <el-pagination
+        :current-page="querys.pagenum"
+        :page-sizes="[2, 3, 4, 5, 6]"
+        :page-size="100"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       >
-        <el-form ref="addFormRef" :rules="rules" :model="loginForm">
-          <el-form-item label="用户名称" prop="username">
-            <el-input v-model="loginForm.username"> </el-input>
-          </el-form-item>
-
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="loginForm.password"> </el-input>
-          </el-form-item>
-
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="loginForm.email"> </el-input>
-          </el-form-item>
-
-          <el-form-item label="手机号" prop="mobile">
-            <el-input v-model="loginForm.mobile"> </el-input>
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <el-button @click="isAddShow = false">取消</el-button>
-          <el-button type="primary" @click="userAdd">确定</el-button>
-        </template>
-      </el-dialog>
-
-      <!-- 分配角色 -->
-      <el-dialog title="分配角色" :visible.sync="isRoleShow" width="30%">
-        <el-form :inline="true" :model="users2" class="demo-form-inline">
-          <el-form-item label="当前的用户">
-            <label>{{ users2.username }}</label></el-form-item
-          ><br />
-          <el-form-item label="当前的角色">
-            <label>{{ users2.role_name }}</label> </el-form-item
-          ><br />
-          <el-form-item label="分配新角色">
-            <el-select
-              v-model="userRoles.roleName"
-              filterable
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in userRoles"
-                :key="item.id"
-                :label="item.roleName"
-                :value="item.roleName"
-              ></el-option>
-            </el-select> </el-form-item
-        ></el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="isRoleShow = false">取 消</el-button>
-          <el-button type="primary" @click="branchUserRole">确 定</el-button>
-        </span></el-dialog
-      >
-    </div>
+      </el-pagination>
+    </el-row>
   </div>
 </template>
 
@@ -197,6 +215,7 @@ export default {
         pagenum: 1,
         pagesize: 5
       },
+      total: null,
       // 添加用户参数
       loginForm: {
         username: '',
@@ -204,7 +223,6 @@ export default {
         email: '',
         mobile: ''
       },
-      // 添加用户校验规则
       users: [], // 用户数据列表
       flag: false,
       rules: {
@@ -241,9 +259,18 @@ export default {
         const res = await userList(this.querys)
         this.users = res.data.data.users
         console.log(res)
+        this.total = res.data.data.total
       } catch (error) {
         console.log(error)
       }
+    },
+    handleCurrentChange (pagenum) {
+      this.querys.pagenum = pagenum
+      this.getUser()
+    },
+    handleSizeChange (pagesize) {
+      this.querys.pagesize = pagesize
+      this.getUser()
     },
     // 查询用户
     async queryUser () {
@@ -354,14 +381,7 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-.main {
-  width: 100%;
-  height: 670px;
-  background-color: #eaedf1;
-  padding: 20px 20px;
-}
 .container {
-  padding: 20px 20px;
-  background-color: #ffffff;
+  padding: 20px 0;
 }
 </style>

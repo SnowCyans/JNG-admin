@@ -52,7 +52,7 @@ export default {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: #cbcfda;
+  background: #c1d1df;
   text-align: center;
   overflow: hidden;
 

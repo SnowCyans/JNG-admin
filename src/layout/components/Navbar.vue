@@ -72,7 +72,7 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  background: skyblue;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
@@ -114,7 +114,7 @@ export default {
         transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, 0.025);
+          background: rgba(15, 197, 188, 0.025);
         }
       }
     }
@@ -148,12 +148,15 @@ export default {
 .navbar {
   // background: -webkit-linear-gradient(pink, skyblue);
   // background-color: #cbcfda;
-  background: url("~@/./assets/common/kf.jpg") no-repeat 0 100%;
+  // background: url("~@/assets/common/kf.jpg") no-repeat 80%;
+  background: #c1d1df;
+
+  // background-color: powderblue;
   background-size: cover;
   background-position: center;
 }
 ::v-deep .app-breadcrumb.el-breadcrumb .no-redirect {
-  color: #fff;
+  color: powderblue;
 }
 .user-avatar {
   cursor: pointer;
@@ -163,11 +166,11 @@ export default {
   vertical-align: middle;
 }
 .name {
-  color: #fff;
+  color: powderblue;
   vertical-align: middle;
   margin-left: 5px;
 }
 .user-dropdown {
-  color: #fff;
+  color: powderblue;
 }
 </style>

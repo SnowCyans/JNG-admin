@@ -85,7 +85,6 @@ export default {
   height: 100vh;
   // background-color: #2b4b6b;
   background: url("~@/assets/common/kf.jpg");
-  // background: url("~@/assets/common/fj3.jpg");
   background-size: cover;
   background-position: cover;
   display: flex;

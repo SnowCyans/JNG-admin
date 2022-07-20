@@ -55,7 +55,7 @@ export const constantRoutes = [
         path: 'tree',
         name: 'tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: '角色权限', icon: 'component' }
+        meta: { title: '权限列表', icon: 'component' }
       }
     ]
   },
