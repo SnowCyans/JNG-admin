@@ -24,3 +24,20 @@ export const removeCommodity = (id) => {
     url: `goods/${id}`
   })
 }
+
+// 商品分类数据列表
+export const commodityClass = (params) => {
+  return request({
+    method: 'GET',
+    url: 'categories',
+    params
+  })
+}
+
+// 删除商品分类
+export const removeCommodityClass = (id) => {
+  return request({
+    method: 'DELETE',
+    url: `categories/${id}`
+  })
+}

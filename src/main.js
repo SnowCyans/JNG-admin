@@ -14,6 +14,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import moment from 'moment'
 
 /**
  * If you don't want to use mock-server
@@ -38,6 +39,12 @@ Vue.config.productionTip = false
 import * as obj from '@/directives'
 Object.keys(obj).forEach(item => {
   Vue.directive(item, obj[item])
+})
+
+// 过滤器
+Vue.filter('moment', function (val) {
+  val = Date.now() - val
+  return moment(val).format('YYYY-MM-DD')
 })
 
 new Vue({

@@ -200,6 +200,8 @@ module.exports = {
     'vue/max-attributes-per-line': 0,
     'object-curly-spacing': 0,
     'no-unused-vars': 0,
-    'no-prototype-builtins': 0
+    'no-prototype-builtins': 0,
+    'eslint-disable-next-line': 0,
+    'eslint-disable': 0
   }
 }

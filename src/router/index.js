@@ -75,6 +75,7 @@ export const constantRoutes = [
         name: 'commoditylist',
         component: () => import('@/views/commodity/commoditylist/index.vue'),
         meta: { title: '商品列表', icon: 'component' }
+
       },
       {
         path: '/parameter',
@@ -87,7 +88,13 @@ export const constantRoutes = [
         name: '/classification',
         component: () => import('@/views/commodity/classification/index.vue'),
         meta: { title: '商品分类', icon: 'component' }
+      },
+      {
+        path: '/add',
+        name: '/add',
+        component: () => import('@/views/commodity/commoditylist/addCommodity/index.vue')
       }
+
     ]
   },
 
