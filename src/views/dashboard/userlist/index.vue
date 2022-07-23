@@ -322,17 +322,23 @@ export default {
     },
     // 删除单个用户
     async handleDelete (index, row) {
-      try {
+      this.$confirm('确定删除嘛?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
         await userDelete(row.id)
-        this.$message({
-          message: '删除成功',
-          type: 'success'
-        })
         this.getUser()
-      } catch (error) {
-        console.log(error)
-        this.$message('删除失败')
-      }
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     // 根据id查询用户信息
     async handleEdit (index, row) {
