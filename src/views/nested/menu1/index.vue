@@ -57,19 +57,16 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="isEditOrderShow = false">取 消</el-button>
-        <el-button type="primary" @click="isEditOrderShow = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="editSave">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-// import options from '@/city/provinces'
 import options from '@/city/city_data2017_element'
 
-import { allOrders, getOrdersId } from '@/api/orders'
+import { allOrders } from '@/api/orders'
 export default {
   components: {},
   data () {
@@ -108,6 +105,10 @@ export default {
     },
     handleChange (value) {
       console.log(value)
+    },
+    editSave () {
+      this.$message.success('修改成功')
+      this.isEditOrderShow = true
     }
   }
 }

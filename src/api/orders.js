@@ -8,11 +8,3 @@ export const allOrders = (params) => {
     params
   })
 }
-
-// 查看订单详情
-export const getOrdersId = ({ id }) => {
-  return request({
-    method: 'GET',
-    url: `orders/${id}`
-  })
-}

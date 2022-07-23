@@ -202,6 +202,7 @@ module.exports = {
     'no-unused-vars': 0,
     'no-prototype-builtins': 0,
     'eslint-disable-next-line': 0,
-    'eslint-disable': 0
+    'eslint-disable': 0,
+    'vue/require-prop-types': 0
   }
 }

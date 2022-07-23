@@ -264,6 +264,7 @@ export default {
         console.log(error)
       }
     },
+    // 分页
     handleCurrentChange (pagenum) {
       this.querys.pagenum = pagenum
       this.getUser()

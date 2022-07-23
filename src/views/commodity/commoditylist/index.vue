@@ -1,9 +1,10 @@
 <template>
   <div class="container">
+    <!-- 商品列表 -->
     <el-input
-      v-model="form.query"
-      placeholder="请输入用户名"
-      style="width: 50%; margin: 0 150px 50px 0"
+      v-model.trim="form.query"
+      placeholder="请输入内容"
+      style="width: 50%; margin: 0 150px 20px 0"
     >
       <el-button
         slot="append"
@@ -35,7 +36,12 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template v-slot="scope">
-            <el-button type="primary" icon="el-icon-edit" circle></el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              circle
+              @click="handleEdit(scope.row)"
+            ></el-button>
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -45,12 +51,48 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- //分页 -->
+      <el-pagination
+        :current-page="form.pagenum"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="form.size"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      >
+      </el-pagination>
     </el-card>
+    <!-- 编辑商品 -->
+    <el-dialog title="编辑商品" :visible.sync="dialogEditVisible">
+      <el-form ref="editForm" :model="editForm" label-width="80px">
+        <el-form-item label="商品名称" prop="goods_name">
+          <el-input v-model="editForm.goods_name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品价格" prop="goods_price">
+          <el-input v-model.number="editForm.goods_price"></el-input>
+        </el-form-item>
+        <el-form-item label="商品数量" prop="goods_number">
+          <el-input v-model="editForm.goods_number"></el-input>
+        </el-form-item>
+        <el-form-item label="商品重量" prop="goods_weight">
+          <el-input v-model.number="editForm.goods_weight"></el-input>
+        </el-form-item>
+        <el-form-item label="介绍" prop="goods_introduce">
+          <el-input v-model="editForm.goods_introduce"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogEditVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editSave">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getCommodity, removeCommodity, queryCommodity } from '@/api/commodity'
+import { getCommodity, removeCommodity, getIdCommodity, editCommodity } from '@/api/commodity'
 export default {
   filters: {},
   components: {},
@@ -62,7 +104,19 @@ export default {
         pagesize: 5
       },
       commodityList: [],
-      total: null
+      total: null,
+
+      // 编辑商品
+      dialogEditVisible: false,
+      editForm: {
+        goods_name: '',
+        goods_price: '',
+        goods_number: '',
+        goods_weight: '',
+        goods_introduce: ''
+      },
+      id: null
+
     }
   },
   computed: {},
@@ -78,6 +132,15 @@ export default {
       this.commodityList = res.data.data.goods
       this.total = res.data.data.total
     },
+    // 分页
+    handleSizeChange (pageSize) {
+      this.form.pagesize = pageSize
+      this.getCommodityList()
+    },
+    handleCurrentChange (pagenum) {
+      this.form.pagenum = pagenum
+      this.getCommodityList()
+    },
     // 查询商品
     async queryCommodity () {
       const res = await getCommodity(this.form)
@@ -85,6 +148,7 @@ export default {
       this.commodityList = res.data.data.goods
       this.total = res.data.data.total
       this.$message.success('查询成功')
+      this.form.query = ''
     },
     // 删除商品
     async handleDelete (row) {
@@ -105,6 +169,27 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 根据id查询商品信息
+    async handleEdit (row) {
+      this.id = row.goods_id
+      const res = await getIdCommodity(row.goods_id)
+      console.log(res)
+      this.editForm = res.data.data
+      console.log(this.editForm)
+      this.dialogEditVisible = true
+    },
+    // 提交编辑商品
+    async editSave () {
+      try {
+        await editCommodity(this.id, this.editForm)
+        this.$message.success('修改成功')
+        this.getCommodityList()
+        this.dialogEditVisible = false
+      } catch (error) {
+        console.log(error)
+        this.$message.error('修改失败')
+      }
     }
   }
 }

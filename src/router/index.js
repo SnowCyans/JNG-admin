@@ -92,6 +92,7 @@ export const constantRoutes = [
       {
         path: '/add',
         name: '/add',
+        hidden: true,
         component: () => import('@/views/commodity/commoditylist/addCommodity/index.vue')
       }
 
