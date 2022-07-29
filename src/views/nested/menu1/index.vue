@@ -108,7 +108,7 @@ export default {
     },
     editSave () {
       this.$message.success('修改成功')
-      this.isEditOrderShow = true
+      this.isEditOrderShow = false
     }
   }
 }
