@@ -1,11 +1,12 @@
 import axios from 'axios'
 
 import store from '@/store'
-// import { getTime } from '@/utils/auth'
+import { getToken } from './auth'
+
+import router from '@/router'
 
 const request = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
-  // baseURL:'http://liufusong.top:8899/api/private/v1/',
   timeout: 8000
 })
 
@@ -14,13 +15,12 @@ request.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
   const token = store.state.user.token
   if (token) {
-    // const time = Date.now() - getTime()
-    // 2 * 60 * 60 * 1000 = 7200000
-    // if (time > 7200000) {
-    //   store.dispatch('user/logout')
-    //   router.push('/login')
-    // }
-    // config.headers['Authorization'] = 'Bearer ' + token
+    const time = Date.now() - getToken()
+    if (time > 1000) {
+      store.dispatch('user/logOut')
+      router.push('/login')
+    }
+    config.headers['Authorization'] = 'Bearer ' + token
     config.headers.Authorization = `${token}`
   }
   return config

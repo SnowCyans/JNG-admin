@@ -14,12 +14,3 @@ export function removeToken () {
   return Cookies.remove(TokenKey)
 }
 
-const TimeKey = 'heima_time_key'
-
-export function setTime (time) {
-  return Cookies.set(TimeKey, time)
-}
-
-export function getTime () {
-  return Cookies.get(TimeKey)
-}
