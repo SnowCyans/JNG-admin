@@ -176,9 +176,6 @@ export default {
     },
     // 保存
     async save () {
-      if (this.editOrAdd) {
-
-      }
     }
   }
 

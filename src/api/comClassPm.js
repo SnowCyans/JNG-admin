@@ -10,3 +10,20 @@ export const parameterList = ({ id, sel }) => {
     }
   })
 }
+
+// 删除参数
+export const removeparameterList = ({ id, attrid }) => {
+  return request({
+    method: 'DELETE',
+    url: `categories/${id}/attributes/${attrid}`
+  })
+}
+
+// 编辑提交参数
+export const editparameter = (data) => {
+  return request({
+    method: 'PUT',
+    url: `categories/${data.id}/attributes/${data.attrId}`,
+    data
+  })
+}
