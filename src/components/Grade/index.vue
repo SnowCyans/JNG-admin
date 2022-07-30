@@ -1,22 +1,8 @@
 <template>
   <div>
     <!-- 等级 -->
-    <el-tag
-      :type="
-        level === '0' || level === 0
-          ? ''
-          : level === '1' || level === 1
-          ? 'success'
-          : 'warning'
-      "
-    >
-      {{
-        level === "0" || level === 0
-          ? "等级一"
-          : level === "1" || level === 1
-          ? "等级二"
-          : "等级三"
-      }}
+    <el-tag :type="levelone">
+      {{ levelwo }}
     </el-tag>
   </div>
 </template>
@@ -34,7 +20,14 @@ export default {
   data () {
     return {}
   },
-  computed: {},
+  computed: {
+    levelone () {
+      return this.level === '0' || this.level === null || this.level === 0 ? '' : this.level === '1' || this.level === 1 ? 'success' : 'warning'
+    },
+    levelwo () {
+      return this.level === '0' || this.level === null || this.level === 0 ? '等级一' : this.level === '1' || this.level === 1 ? '等级二' : '等级三'
+    }
+  },
   watch: {},
   created () { },
   methods: {}

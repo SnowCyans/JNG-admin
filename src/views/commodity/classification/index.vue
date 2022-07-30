@@ -60,25 +60,25 @@
       title="添加商品分类"
       :visible.sync="isAddCommodityClass"
       width="30%"
+      @close="handleClose"
     >
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="分类名称">
+      <el-form ref="addFormRef" :rules="rules" :model="form" label-width="80px">
+        <el-form-item label="分类名称" prop="cat_name">
           <el-input v-model="form.cat_name"></el-input>
         </el-form-item>
-        <el-form-item label="父级分类">
-          <div class="block">
-            <el-cascader
-              ref="cascader"
-              :options="CommodityClassList"
-              :props="{
-                checkStrictly: true,
-                value: 'cat_id',
-                label: 'cat_name',
-              }"
-              clearable
-              @change="handleChange"
-            ></el-cascader>
-          </div>
+        <el-form-item label="父级分类" prop="cat_level">
+          <el-cascader
+            ref="cascader"
+            v-model="form.cat_level"
+            :options="CommodityClassList"
+            :props="{
+              checkStrictly: true,
+              value: 'cat_id',
+              label: 'cat_name',
+            }"
+            clearable
+            @change="handleChange"
+          ></el-cascader>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -117,6 +117,10 @@ export default {
         cat_pid: null,
         cat_name: '',
         cat_level: null
+      },
+      rules: {
+        cat_name: [{ required: true, message: '请输入内容', trigger: 'blur' }],
+        cat_level: [{ required: true, message: '请选择', trigger: 'change' }]
       },
       // 编辑提交分类
       dialogEditClassVisible: false,
@@ -159,11 +163,23 @@ export default {
         })
       })
     },
-    handleChange (val) {
-      console.log(val)
+    // 获取选中的内容
+    handleChange () {
+      const casca = this.$refs.cascader.getCheckedNodes()
+      console.log(casca[0].data)
+      this.form.cat_level = casca[0].data.cat_level
+      this.form.cat_pid = casca[0].data.cat_pid
     },
-    save () {
-      this.$refs.cascader.getCheckedNodes()
+    // 添加
+    async save () {
+      await addCommodityClass(this.form)
+      this.$message.success('添加成功')
+      this.isAddCommodityClass = false
+      this.getCommodityClassList()
+    },
+    // 关闭dialog重置表单数据
+    handleClose () {
+      this.$refs.addFormRef.resetFields()
     },
     // 根据 id 查询分类
     async handleEdit (index, row) {
@@ -174,7 +190,7 @@ export default {
       this.editClassForm.cat_name = res.data.data.cat_name
       this.dialogEditClassVisible = true
     },
-    // 标记分类提交
+    // 标编辑分类提交
     async editClassSave () {
       try {
         await editCommodityClass(this.id, this.editClassForm)
