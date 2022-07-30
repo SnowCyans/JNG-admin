@@ -52,6 +52,7 @@
                   value: 'cat_id',
                   label: 'cat_name',
                 }"
+                @change="cascaderHandleChange"
               ></el-cascader>
             </el-form-item>
           </el-form>
@@ -89,15 +90,17 @@
         </el-tab-pane>
 
         <el-tab-pane label="商品图片">
-          <el-upload class="upload-demo" drag action="" multiple>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">
-              将文件拖到此处，或<em>点击上传</em>
-            </div>
-            <div slot="tip" class="el-upload__tip">
-              只能上传jpg/png文件，且不超过500kb
-            </div>
+          <el-upload
+            action="http://liufusong.top:8899/api/private/v1/goods"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+          >
+            <i class="el-icon-plus"></i>
           </el-upload>
+          <el-dialog :visible.sync="uploadDialogVisible">
+            <img width="100%" :src="form.pics" alt="" />
+          </el-dialog>
         </el-tab-pane>
         <el-tab-pane label="商品内容">
           <editoritem
@@ -116,7 +119,7 @@
 <script>
 import editoritem from '@/components/editoritem'
 import { parameterList } from '@/api/comClassPm'
-import { commodityClass, addCommodity } from '@/api/commodity'
+import { getCommodityClass, addCommodity } from '@/api/commodity'
 export default {
   name: 'AddCommodity',
   filters: {},
@@ -157,7 +160,9 @@ export default {
       attributeForm: {
         name: ''
       },
-      attributeList: []
+      attributeList: [],
+      // 图片上传
+      uploadDialogVisible: false
 
     }
   },
@@ -200,9 +205,22 @@ export default {
     },
     // 商品分类数据列表
     async getCommodityClassList () {
-      const res = await commodityClass()
+      const res = await getCommodityClass()
       console.log(res)
       this.CommodityClassList = res.data.data
+    },
+    // 获取级联选择器内容
+    cascaderHandleChange (val) {
+      console.log(val)
+      this.form.goods_cat = val.join(',')
+    },
+    // 图片上传
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePictureCardPreview (file) {
+      this.form.pics = file.url
+      this.dialogVisible = true
     },
     // 监听富文本的输入
     catchData (e) {
@@ -216,10 +234,10 @@ export default {
 
     // 确定添加商品
     async save () {
-      // const res = await addCommodity(this.form)
-      // console.log(res)
-      console.log(this.form.goods_cat)
-      console.log(this.$refs.myCascader.getCheckedNodes())
+      const res = await addCommodity(this.form)
+      console.log(res)
+      this.$message.success('添加成功')
+      this.$router.push({ name: 'commoditylist' })
     },
     handleChange (value) {
       console.log(value)

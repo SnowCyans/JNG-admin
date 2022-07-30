@@ -63,7 +63,7 @@
     >
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="分类名称">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.cat_name"></el-input>
         </el-form-item>
         <el-form-item label="父级分类">
           <div class="block">
@@ -114,7 +114,9 @@ export default {
       // 添加商品分类dialog
       isAddCommodityClass: false,
       form: {
-        name: ''
+        cat_pid: null,
+        cat_name: '',
+        cat_level: null
       },
       // 编辑提交分类
       dialogEditClassVisible: false,
@@ -157,8 +159,8 @@ export default {
         })
       })
     },
-    handleChange (value) {
-      console.log(value)
+    handleChange (val) {
+      console.log(val)
     },
     save () {
       this.$refs.cascader.getCheckedNodes()

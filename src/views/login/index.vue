@@ -4,7 +4,7 @@
       <div class="login-avatar"></div>
       <el-form ref="loginFormRef" :rules="rules" :model="loginForm">
         <el-form-item prop="username">
-          <el-input v-model="loginForm.username">
+          <el-input v-model.trim="loginForm.username">
             <template #prefix>
               <svg-icon icon-class="user" />
             </template>
