@@ -122,6 +122,29 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/animationss',
+    component: Layout,
+    redirect: '/animationss/menu1',
+    name: 'animationss',
+    meta: {
+      title: '动画',
+      icon: 'dashboard'
+    },
+    children: [
+      {
+        path: 'DayandNight',
+        component: () => import('@/views/animationss/DayandNight.vue'), // Parent router-view
+        name: 'DayandNight',
+        meta: { title: '昼夜' }
+      },
+      {
+        path: 'menu2',
+        component: () => import('@/views/nested/menu2/index'),
+        name: 'menu2'
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

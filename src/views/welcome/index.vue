@@ -1,32 +1,54 @@
 <template>
-  <label for="theme" class="theme">
-    <span>开关</span>
-    <span class="theme__toggle-wrap">
-      <input
-        id="theme"
-        class="theme__toggle"
-        type="checkbox"
-        role="switch"
-        name="theme"
-        value="dark"
-      />
-      <span class="theme__fill"></span>
-      <span class="theme__icon">
-        <span class="theme__icon-part"></span>
-        <span class="theme__icon-part"></span>
-        <span class="theme__icon-part"></span>
-        <span class="theme__icon-part"></span>
-        <span class="theme__icon-part"></span>
-        <span class="theme__icon-part"></span>
-        <span class="theme__icon-part"></span>
-        <span class="theme__icon-part"></span>
-        <span class="theme__icon-part"></span>
-      </span>
-    </span>
-  </label>
+  <div class="main">
+    <div class="btnContainer">
+      <svg
+        width="100"
+        height="220"
+        viewBox="0 0 100 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path id="rope" d="M50 0V130" stroke="#333842" stroke-width="6" />
+        <path
+          id="rope-original"
+          d="M50 0V130"
+          stroke="black"
+          stroke-width="1"
+          class="hidden"
+        />
+        <path
+          id="rope-extended"
+          d="M50 0V170"
+          stroke="black"
+          stroke-width="1"
+          class="hidden"
+        />
+        <path
+          id="rope-compressed"
+          d="M50.6794 99.5395C50.6794 99.5395 51.0304 93.3539 50.6794 89.416C49.698 78.405 40.6105 73.7631 41.2462 62.7267C42.1339 47.3139 63.6882 46.1634 64.4843 30.7456C65.1561 17.7347 50.6794 0.375 50.6794 0.375"
+          stroke="black"
+          stroke-width="1"
+          class="hidden"
+        />
+        <path
+          id="rope-end"
+          d="M39.282 5.16623C39.9597 1.92197 42.8198 -0.402344 46.134 -0.402344H54.756C58.1211 -0.402344 61.01 1.99207 61.6344 5.29871L68.4328 41.2987C69.2468 45.6092 65.941 49.5977 61.5544 49.5977H38.6135C34.1717 49.5977 30.8531 45.5141 31.7614 41.1662L39.282 5.16623Z"
+          transform="matrix(1,0,0,1,0,120)"
+          fill="#3B2898"
+        />
+      </svg>
+      <div id="btn" class="btn no-highlight">
+        <div class="knob no-highlight">
+          <div class="light no-highlight"></div>
+          <div class="top no-highlight"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import gsap from 'gsap'
 export default {
   filters: {},
   components: {},
@@ -35,246 +57,150 @@ export default {
   },
   computed: {},
   watch: {},
+  mounted () {
+    let isChecked = false
+
+    function onBtnDown () {
+      const tl = gsap.timeline()
+      tl.to('#rope-end', { duration: 0.2, y: 160 }, 'start')
+      tl.to('#rope', { duration: 0.2, morphSVG: '#rope-extended' }, 'start')
+    }
+
+    function onBtnUp () {
+      const tl = gsap.timeline()
+      tl.to(
+        '#rope',
+        { duration: 0.4, morphSVG: '#rope-compressed', ease: 'bounce.out' },
+        'up'
+      )
+      tl.to(
+        '#rope',
+        { duration: 0.2, morphSVG: '#rope-original', ease: 'bounce.out' },
+        'down'
+      )
+      tl.to('#rope-end', { duration: 0.4, y: 90, ease: 'bounce.out' }, 'up')
+      tl.to('#rope-end', { duration: 0.2, y: 120, ease: 'bounce.out' }, 'down')
+
+      isChecked = !isChecked
+
+      let x = 0
+      let backgroundColor = '#827D96'
+      let size = '100px'
+
+      if (isChecked) {
+        x = 160
+        backgroundColor = '#FFFFFF'
+        size = '500px'
+      }
+
+      tl.to('.knob', { x, duration: 1 }, 'up')
+      tl.to('.top', { backgroundColor, duration: 1 }, 'up')
+      tl.to('.light', { width: size, height: size, duration: 1 }, 'up')
+    }
+
+    const btn = document.getElementById('btn')
+    btn.addEventListener('mousedown', onBtnDown)
+    btn.addEventListener('mouseup', onBtnUp)
+  },
   created () { },
   methods: {}
 }
 </script>
 
- <style scope lang='scss'>
-* {
-  border: 0;
-  box-sizing: border-box;
+<style scoped>
+.main {
+  height: 660px;
+  background-color: #1a2031;
+}
+body {
   margin: 0;
-  padding: 0;
-}
-
-:root {
-  --hue: 223;
-  --bg: hsl(var(--hue), 10%, 100%);
-  --fg: hsl(var(--hue), 10%, 0%);
-  --primary: hsl(var(--hue), 90%, 55%);
-  --primaryT: hsla(var(--hue), 90%, 55%, 0);
-  --transDur: 0.3s;
-  font-size: calc(16px + (32 - 16) * (100vw - 320px) / (1280 - 320));
-}
-
-html,
-body {
-  background-color: var(--bg);
-}
-
-body,
-input {
-  font: 1em/1.5 Fredoka, sans-serif;
-}
-
-body {
-  color: var(--fg);
-  height: 100vh;
-  display: grid;
-  place-items: center;
-}
-
-/* Default */
-.theme {
-  margin-top: 250px;
-  display: flex;
-  align-items: center;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.theme__fill,
-.theme__icon {
-  transition: transform var(--transDur) ease-in-out;
-}
-
-.theme__fill {
-  background-color: var(--bg);
-  display: block;
-  mix-blend-mode: difference;
-  position: fixed;
-  inset: 0;
   height: 100%;
-  transform: translateX(-100%);
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1a2031;
 }
 
-.theme__icon,
-.theme__toggle {
-  z-index: 1;
+* {
+  box-sizing: border-box;
 }
 
-.theme__icon,
-.theme__icon-part {
+.btnContainer {
+  margin-left: 40%;
+  width: 320px;
+  height: 160px;
+  position: relative;
+  top: 200px;
+}
+
+.btn {
   position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: #3c3459;
+  border-radius: 999px;
+  padding: 10px;
+  cursor: pointer;
 }
 
-.theme__icon {
-  display: block;
-  top: 0.75em;
-  left: 0.75em;
-  width: 1.5em;
-  height: 1.5em;
-}
-
-.theme__icon-part {
-  border-radius: 50%;
-  box-shadow: 0.4em -0.4em 0 0.5em hsl(0, 0%, 100%) inset;
-  top: calc(50% - 0.5em);
-  left: calc(50% - 0.5em);
-  width: 1em;
-  height: 1em;
-  transition: box-shadow var(--transDur) ease-in-out,
-    opacity var(--transDur) ease-in-out, transform var(--transDur) ease-in-out;
-  transform: scale(0.5);
-}
-
-.theme__icon-part ~ .theme__icon-part {
-  background-color: hsl(0, 0%, 100%);
-  border-radius: 0.05em;
-  box-shadow: none;
-  top: 50%;
-  left: calc(50% - 0.05em);
-  transform: rotate(0deg) translateY(0.5em);
-  transform-origin: 50% 0;
-  width: 0.1em;
-  height: 0.2em;
-}
-
-.theme__icon-part:nth-child(3) {
-  transform: rotate(45deg) translateY(0.5em);
-}
-
-.theme__icon-part:nth-child(4) {
-  transform: rotate(90deg) translateY(0.5em);
-}
-
-.theme__icon-part:nth-child(5) {
-  transform: rotate(135deg) translateY(0.5em);
-}
-
-.theme__icon-part:nth-child(6) {
-  transform: rotate(180deg) translateY(0.5em);
-}
-
-.theme__icon-part:nth-child(7) {
-  transform: rotate(225deg) translateY(0.5em);
-}
-
-.theme__icon-part:nth-child(8) {
-  transform: rotate(270deg) translateY(0.5em);
-}
-
-.theme__icon-part:nth-child(9) {
-  transform: rotate(315deg) translateY(0.5em);
-}
-
-.theme__label,
-.theme__toggle,
-.theme__toggle-wrap {
+.knob {
+  width: 140px;
+  height: 140px;
   position: relative;
 }
 
-.theme__toggle,
-.theme__toggle:before {
-  display: block;
+.top {
+  background-color: #827d96;
+  border-radius: 999px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 
-.theme__toggle {
-  background-color: hsl(48, 90%, 85%);
-  border-radius: 25% / 50%;
-  box-shadow: 0 0 0 0.125em var(--primaryT);
-  padding: 0.25em;
-  width: 6em;
-  height: 3em;
-  -webkit-appearance: none;
-  appearance: none;
-  transition: background-color var(--transDur) ease-in-out,
-    box-shadow 0.15s ease-in-out, transform var(--transDur) ease-in-out;
+.light {
+  border-radius: 999px;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #4cc3e2 10.42%,
+    rgba(94, 199, 227, 0.791579) 27.08%,
+    rgba(113, 204, 229, 0.35) 45.31%,
+    rgba(144, 213, 231, 0.11) 65.1%,
+    rgba(158, 216, 231, 0.02) 78.12%,
+    rgba(177, 221, 233, 0) 95.83%
+  );
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.theme__toggle:before {
-  background-color: hsl(48, 90%, 55%);
-  border-radius: 50%;
-  content: "";
-  width: 2.5em;
-  height: 2.5em;
-  transition: background-color var(--transDur) ease-in-out,
-    transform var(--transDur) ease-in-out;
+.hidden {
+  visibility: hidden;
 }
 
-.theme__toggle:focus {
-  box-shadow: 0 0 0 0.125em var(--primary);
-  outline: transparent;
+svg {
+  position: absolute;
+  bottom: 200px;
+  left: 0;
+  top: 90%;
 }
 
-/* Checked */
-.theme__toggle:checked {
-  background-color: hsl(198, 90%, 15%);
-}
-
-.theme__toggle:checked:before,
-.theme__toggle:checked ~ .theme__icon {
-  transform: translateX(3em);
-}
-
-.theme__toggle:checked:before {
-  background-color: hsl(198, 90%, 55%);
-}
-
-.theme__toggle:checked ~ .theme__fill {
-  transform: translateX(0);
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(1) {
-  box-shadow: 0.2em -0.2em 0 0.2em hsl(0, 0%, 100%) inset;
-  transform: scale(1);
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part ~ .theme__icon-part {
-  opacity: 0;
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(2) {
-  transform: rotate(45deg) translateY(0.8em);
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(3) {
-  transform: rotate(90deg) translateY(0.8em);
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(4) {
-  transform: rotate(135deg) translateY(0.8em);
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(5) {
-  transform: rotate(180deg) translateY(0.8em);
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(6) {
-  transform: rotate(225deg) translateY(0.8em);
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(7) {
-  transform: rotate(270deg) translateY(0.8em);
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(8) {
-  transform: rotate(315deg) translateY(0.8em);
-}
-
-.theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(9) {
-  transform: rotate(360deg) translateY(0.8em);
-}
-
-.theme__toggle-wrap {
-  margin: 0 0.75em;
-}
-
-.theme__toggle:focus {
-  box-shadow: 0 0 0 0.125em var(--primaryT);
-}
-
-.theme__toggle:focus-visible {
-  box-shadow: 0 0 0 0.125em var(--primary);
+.no-highlight {
+  /* bad for accessibility - please don't use this in real world applications */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style>
