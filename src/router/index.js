@@ -125,7 +125,7 @@ export const constantRoutes = [
   {
     path: '/animationss',
     component: Layout,
-    redirect: '/animationss/menu1',
+    redirect: '/animationss/DayandNight',
     name: 'animationss',
     meta: {
       title: '动画',
@@ -134,14 +134,15 @@ export const constantRoutes = [
     children: [
       {
         path: 'DayandNight',
-        component: () => import('@/views/animationss/DayandNight.vue'), // Parent router-view
+        component: () => import('@/views/animationss/DayandNight.vue'),
         name: 'DayandNight',
         meta: { title: '昼夜' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'menu2'
+        path: 'AnimationMenu',
+        component: () => import('@/views/animationss/AnimationMenu.vue'),
+        name: 'AnimationMenu',
+        meta: { title: '123' }
       }
     ]
   },

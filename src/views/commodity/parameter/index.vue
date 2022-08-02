@@ -147,7 +147,9 @@ export default {
       this.editOrAdd = true
       this.dialogVisible = true
       console.log(row.attr_name)
-      this.editOrAddForm.attr_name = row.attr_name
+      if (this.editOrAdd) {
+        this.editOrAddForm.attr_name = row.attr_name
+      }
     },
     // 删除
     async handleDelete (row) {
