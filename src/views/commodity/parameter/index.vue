@@ -13,7 +13,6 @@
         <el-form-item label="选择商品分类">
           <el-cascader
             ref="cascader"
-            v-model="form.id"
             :options="CommodityClassList"
             :props="{
               expandTrigger: 'hover',
@@ -35,6 +34,7 @@
         type="primary"
         size="mini"
         round
+        :disabled="parameterList.length === 0"
         @click="addParameter"
         >添加参数</el-button
       >
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { parameterList, removeparameterList } from '@/api/comClassPm'
+import { parameterList, removeparameterList, addParameter, editParameter } from '@/api/comClassPm'
 import { getCommodityClass } from '@/api/commodity'
 export default {
   filters: {},
@@ -101,9 +101,10 @@ export default {
         id: null,
         attrId: null,
         attr_name: '',
-        attr_sel: '',
+        attr_sel: 'many',
         attr_vals: ''
       }
+
     }
   },
   computed: {
@@ -124,11 +125,13 @@ export default {
     async handleClick (tab) {
       if (tab.index === '1') {
         this.form.sel = 'only'
+        this.editOrAddForm.attr_sel = 'only'
         const res = await parameterList(this.form)
         console.log(res)
         this.parameterList = res.data.data
       } else {
         this.form.sel = 'many'
+        this.editOrAddForm.attr_sel = 'many'
         const res = await parameterList(this.form)
         console.log(res)
         this.parameterList = res.data.data
@@ -138,6 +141,8 @@ export default {
     async handleChange () {
       const casca = this.$refs.cascader.getCheckedNodes()
       this.form.id = casca[0].data.cat_id
+      this.editOrAddForm.id = casca[0].data.cat_id
+      console.log(casca[0].data.cat_id)
       const res = await parameterList(this.form)
       this.parameterList = res.data.data
     },
@@ -149,6 +154,7 @@ export default {
       console.log(row.attr_name)
       if (this.editOrAdd) {
         this.editOrAddForm.attr_name = row.attr_name
+        this.editOrAddForm.attrId = row.attr_id
       }
     },
     // 删除
@@ -175,9 +181,20 @@ export default {
     addParameter () {
       this.editOrAdd = false
       this.dialogVisible = true
+      this.editOrAddForm.attr_name = ''
     },
     // 保存
     async save () {
+      if (this.editOrAdd) {
+        await editParameter(this.editOrAddForm)
+        this.$message.success('修改成功')
+        this.dialogVisible = false
+        this.get
+      } else {
+        await addParameter(this.editOrAddForm)
+        this.$message.success('添加成功')
+        this.dialogVisible = false
+      }
     }
   }
 

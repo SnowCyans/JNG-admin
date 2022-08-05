@@ -19,8 +19,17 @@ export const removeparameterList = ({ id, attrid }) => {
   })
 }
 
+// 添加分类
+export const addParameter = (data) => {
+  return request({
+    method: 'POST',
+    url: `categories/${data.id}/attributes`,
+    data
+  })
+}
+
 // 编辑提交参数
-export const editparameter = (data) => {
+export const editParameter = (data) => {
   return request({
     method: 'PUT',
     url: `categories/${data.id}/attributes/${data.attrId}`,

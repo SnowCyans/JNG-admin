@@ -142,7 +142,7 @@ export const constantRoutes = [
         path: 'AnimationMenu',
         component: () => import('@/views/animationss/AnimationMenu.vue'),
         name: 'AnimationMenu',
-        meta: { title: '123' }
+        meta: { title: '晨光熹微' }
       }
     ]
   },
