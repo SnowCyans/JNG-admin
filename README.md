@@ -4,7 +4,7 @@
 
 ```bash
 # 克隆项目
-git clone git@github.com:powderbluen/testQuestions.git
+git clone git@github.com:powderbluen/JNG-admin.git
 
 # 进入项目目录
 cd adminSystem-main
