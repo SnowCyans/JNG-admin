@@ -7,13 +7,13 @@
 git clone git@github.com:powderbluen/JNG-admin.git
 
 # 进入项目目录
-cd adminSystem-main
+cd JNG-admin
 
 # 安装依赖
 yarn
 
 # 启动服务
-yarn serve
+yarn dev
 ```
 
 ## 发布
